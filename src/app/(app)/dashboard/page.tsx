@@ -19,7 +19,7 @@ const Page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-
+  const [profileUrl, setProfileUrl] = useState<string>(''); // State for profile URL
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
@@ -78,6 +78,11 @@ const Page = () => {
     if (!session || !session.user) return;
     fetchMessages();
     fetchAcceptMessage();
+
+    // Set the profile URL once the session is available
+    const username = session.user.username;
+    const baseUrl = `${window.location.protocol}//${window.location.host}`;
+    setProfileUrl(`${baseUrl}/u/${username}`);
   }, [session]);
 
   const handleSwitchChange = async () => {
@@ -100,10 +105,6 @@ const Page = () => {
       });
     }
   };
-
-  const username = session?.user?.username;
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
-  const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(profileUrl);
