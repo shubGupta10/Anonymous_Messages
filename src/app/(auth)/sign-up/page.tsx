@@ -89,7 +89,7 @@ const page = () => {
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join True Feedback
+            Join Anonymous Feedback
           </h1>
           <p className="mb-4">Sign up to start your anonymous adventure</p>
         </div>
@@ -131,7 +131,7 @@ const page = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <Input {...field} name="email" />
-                  <p className='text-muted text-gray-400 text-sm'>We will send you a verification code</p>
+                  <p className=' text-black text-sm'>We will send you a verification code</p>
                   <FormMessage />
                 </FormItem>
               )}
