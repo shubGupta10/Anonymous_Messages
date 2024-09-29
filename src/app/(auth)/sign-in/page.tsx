@@ -15,11 +15,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useToast } from '@/components/ui/toaster'
+import { useToast } from '@/components/ui/toaster';
 import { signInSchema } from '@/schemas/signInSchema';
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react';
 
 export default function SignInForm() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -30,12 +33,17 @@ export default function SignInForm() {
   });
 
   const { toast } = useToast();
+
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
+    setLoading(true); // Start loading
+
     const result = await signIn('credentials', {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
     });
+
+    setLoading(false); // Stop loading
 
     if (result?.error) {
       if (result.error === 'CredentialsSignin') {
@@ -57,14 +65,6 @@ export default function SignInForm() {
       router.replace('/dashboard');
     }
   };
-
-  const handleCheck = () => {
-   toast({
-    title: "Button is working",
-    description: "Description for button is here"
-   })
-    
-  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-800">
@@ -99,7 +99,13 @@ export default function SignInForm() {
                 </FormItem>
               )}
             />
-           <Button className="w-full" type="submit">Sign In</Button>
+            <Button className="w-full flex items-center justify-center" type="submit" disabled={loading}>
+              {loading ? (
+                <Loader2 className="animate-spin mr-2 h-5 w-5" />
+              ) : (
+                'Sign In'
+              )}
+            </Button>
           </form>
         </Form>
         <div className="text-center mt-4">
