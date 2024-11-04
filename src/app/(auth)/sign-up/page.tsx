@@ -85,91 +85,94 @@ const page = () => {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-800">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join Anonymous Feedback
-          </h1>
-          <p className="mb-4">Sign up to start your anonymous adventure</p>
-        </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              name="username"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <Input
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e);
-                      debounced(e.target.value);
-                    }}
-                  />
-                  {isCheckingUsername && <Loader2 className="animate-spin" />}
-                  {!isCheckingUsername && usernameMessage && (
-                    <p
-                      className={`text-sm ${
-                        usernameMessage === 'Username is unique'
-                          ? 'text-green-500'
-                          : 'text-red-500'
-                      }`}
-                    >
-                      {usernameMessage}
-                    </p>
-                  )}
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="email"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <Input {...field} name="email" />
-                  <p className=' text-black text-sm'>We will send you a verification code</p>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <Input type="password" {...field} name="password" />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className='w-full' disabled={isSubmitting}>
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Please wait
-                </>
-              ) : (
-                'Sign Up'
-              )}
-            </Button>
-          </form>
-        </Form>
-        <div className="text-center mt-4">
-          <p>
-            Already a member?{' '}
-            <Link href="/sign-in" className="text-blue-600 hover:text-blue-800">
-              Sign in
-            </Link>
-          </p>
-        </div>
-      </div>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+  <div className="w-full max-w-md p-10 space-y-8 bg-white rounded-lg shadow-lg transition-transform duration-200 hover:shadow-xl">
+    <div className="text-center">
+      <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 lg:text-5xl mb-4">
+        Join Anonymous Feedback
+      </h1>
+      <p className="mb-4 text-gray-600">Sign up to start your anonymous adventure</p>
     </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          name="username"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <Input
+                {...field}
+                onChange={(e) => {
+                  field.onChange(e);
+                  debounced(e.target.value);
+                }}
+                className="border rounded-md focus:ring-2 focus:ring-blue-500"
+              />
+              {isCheckingUsername && <Loader2 className="animate-spin mt-2" />}
+              {!isCheckingUsername && usernameMessage && (
+                <p
+                  className={`text-sm mt-1 ${
+                    usernameMessage === 'Username is unique' ? 'text-green-500' : 'text-red-500'
+                  }`}
+                >
+                  {usernameMessage}
+                </p>
+              )}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="email"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <Input {...field} name="email" className="border rounded-md focus:ring-2 focus:ring-blue-500" />
+              <p className='text-gray-600 text-sm mt-1'>We will send you a verification code</p>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          name="password"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <Input type="password" {...field} name="password" className="border rounded-md focus:ring-2 focus:ring-blue-500" />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button 
+          type="submit" 
+          className="w-full bg-blue-600 text-white hover:bg-blue-500 transition duration-200 rounded-md py-2 flex items-center justify-center"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Please wait
+            </>
+          ) : (
+            'Sign Up'
+          )}
+        </Button>
+      </form>
+    </Form>
+    <div className="text-center mt-4">
+      <p className="text-gray-600">
+        Already a member?{' '}
+        <Link href="/sign-in" className="text-blue-600 hover:text-blue-800 transition duration-200">
+          Sign in
+        </Link>
+      </p>
+    </div>
+  </div>
+</div>
   );
 }
 

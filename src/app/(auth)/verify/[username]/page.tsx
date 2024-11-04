@@ -47,13 +47,15 @@ const page = () => {
         }
       }
       return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
-          <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+        <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-200 to-gray-100">
+          <div className="w-full max-w-md p-10 space-y-8 bg-white rounded-lg shadow-lg transition-transform duration-200 hover:shadow-xl">
             <div className="text-center">
-              <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+              <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 lg:text-5xl mb-4">
                 Verify Your Account
               </h1>
-              <p className="mb-4">Enter the verification code sent to your email</p>
+              <p className="text-gray-600 mb-6">
+                Enter the verification code sent to your email
+              </p>
             </div>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -62,13 +64,22 @@ const page = () => {
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Verification Code</FormLabel>
-                      <Input {...field} />
+                      <FormLabel className="text-gray-700">Verification Code</FormLabel>
+                      <Input
+                        {...field}
+                        className="border rounded-md focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter your code"
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit">Verify</Button>
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white hover:bg-blue-500 transition duration-200 rounded-md py-2"
+                >
+                  Verify
+                </Button>
               </form>
             </Form>
           </div>

@@ -35,7 +35,7 @@ export default function SignInForm() {
   const { toast } = useToast();
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-    setLoading(true); 
+    setLoading(true);
 
     const result = await signIn('credentials', {
       redirect: false,
@@ -43,7 +43,7 @@ export default function SignInForm() {
       password: data.password,
     });
 
-    setLoading(false); 
+    setLoading(false);
 
     if (result?.error) {
       if (result.error === 'CredentialsSignin') {
@@ -67,13 +67,13 @@ export default function SignInForm() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-800">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg transform transition-all duration-300 hover:shadow-xl">
         <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+          <h1 className="text-4xl font-extrabold tracking-tight text-gray-800 lg:text-5xl mb-4">
             Welcome Back to Anonymous Feedback
           </h1>
-          <p className="mb-4">Sign in to continue your secret conversations</p>
+          <p className="mb-6 text-gray-600">Sign in to continue your secret conversations</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -83,7 +83,7 @@ export default function SignInForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email/Username</FormLabel>
-                  <Input {...field} />
+                  <Input {...field} aria-label="Email or Username" />
                   <FormMessage />
                 </FormItem>
               )}
@@ -94,12 +94,17 @@ export default function SignInForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <Input type="password" {...field} />
+                  <Input type="password" {...field} aria-label="Password" />
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button className="w-full flex items-center justify-center" type="submit" disabled={loading}>
+            <Button 
+              className="w-full flex items-center justify-center bg-blue-600 text-white hover:bg-blue-500 transition duration-200" 
+              type="submit" 
+              disabled={loading}
+              aria-live="polite" // To announce loading state
+            >
               {loading ? (
                 <Loader2 className="animate-spin mr-2 h-5 w-5" />
               ) : (
@@ -109,9 +114,9 @@ export default function SignInForm() {
           </form>
         </Form>
         <div className="text-center mt-4">
-          <p>
+          <p className="text-gray-600">
             Not a member yet?{' '}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
+            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800 transition duration-200">
               Sign up
             </Link>
           </p>

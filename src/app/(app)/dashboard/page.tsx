@@ -19,7 +19,7 @@ const Page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-  const [profileUrl, setProfileUrl] = useState<string>(''); // State for profile URL
+  const [profileUrl, setProfileUrl] = useState<string>(''); 
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
@@ -75,15 +75,19 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (!session || !session.user) return;
-    fetchMessages();
-    fetchAcceptMessage();
-
-    // Set the profile URL once the session is available
-    const username = session.user.username;
-    const baseUrl = `${window.location.protocol}//${window.location.host}`;
-    setProfileUrl(`${baseUrl}/u/${username}`);
+    if (session && session.user) {
+      fetchMessages();
+      fetchAcceptMessage();
+  
+      const username = session.user.username;
+      if (username) {
+        const baseUrl = `${window.location.protocol}//${window.location.host}`;
+        setProfileUrl(`${baseUrl}/u/${username}`);
+      }
+    }
   }, [session]);
+  
+  
 
   const handleSwitchChange = async () => {
     try {
@@ -120,27 +124,33 @@ const Page = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
-      <h1 className="text-3xl md:text-4xl font-bold">User Dashboard</h1>
-
+      <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">User Dashboard</h1>
+  
+      {/* Profile Link Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-4">Your Unique Profile Link</h2>
-        <div className="flex flex-col sm:flex-row items-stretch gap-2">
+        <div className="flex flex-col sm:flex-row items-center gap-4">
           <div className="relative flex-grow">
             <input
               type="text"
               value={profileUrl}
               readOnly
-              className="w-full p-2 pr-10 border rounded-md"
+              className="w-full p-3 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150"
+              aria-label="Profile URL"
             />
             <LinkIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           </div>
-          <Button onClick={copyToClipboard} className="w-full sm:w-auto flex items-center justify-center">
+          <Button 
+            onClick={copyToClipboard} 
+            className="w-full sm:w-auto flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 transition duration-200"
+          >
             <Clipboard className="mr-2 h-4 w-4" />
             Copy Link
           </Button>
         </div>
       </div>
-
+  
+      {/* Message Settings Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <h2 className="text-xl font-semibold mb-4">Message Settings</h2>
         <div className="flex items-center justify-between">
@@ -150,13 +160,15 @@ const Page = () => {
             checked={acceptMessages}
             onCheckedChange={handleSwitchChange}
             disabled={isSwitchLoading}
+            className={`transition duration-200 ${isSwitchLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           />
         </div>
         <p className="mt-2 text-sm text-gray-600">
-          {acceptMessages ? "You're currently accepting messages" : "You're not accepting messages at the moment"}
+          {acceptMessages ? "You're currently accepting messages." : "You're not accepting messages at the moment."}
         </p>
       </div>
-
+  
+      {/* Messages Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">Your Messages</h2>
@@ -164,7 +176,7 @@ const Page = () => {
             variant="outline"
             onClick={() => fetchMessages(true)}
             disabled={isLoading}
-            className="flex items-center"
+            className={`flex items-center border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition duration-200 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin mr-2" />
@@ -193,6 +205,6 @@ const Page = () => {
       </div>
     </div>
   );
-};
+  };
 
 export default Page;
