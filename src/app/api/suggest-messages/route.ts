@@ -11,7 +11,8 @@ if (!geminiApiKey) {
 const googleAI = new GoogleGenerativeAI(geminiApiKey);
 const geminiModel = googleAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
-export const runtime = 'edge';
+// Comment out runtime = 'edge' for default Node.js runtime
+// export const runtime = 'edge'; // REMOVE or comment out this line
 
 export async function POST(req: Request) {
   try {
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
     const defaultPrompt = "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction.";
 
     let prompt;
-    
+
     // Try to parse the request body, use default if parsing fails
     try {
       const body = await req.json();
@@ -30,8 +31,10 @@ export async function POST(req: Request) {
 
     // Generate content using Gemini
     const result = await geminiModel.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    
+    // Await the response and extract text
+    const response = await result.response; // Ensure 'response' is awaited properly
+    const text = await response.text(); // Ensure to await the 'text()' method
 
     // Validate the response
     if (!text) {
