@@ -12,12 +12,14 @@ import { MessageSquare, Shield, Lock, Zap } from "lucide-react"
 import messages from '@/data/messages.json'
 import autoPlay from 'embla-carousel-autoplay'
 import useEmblaCarousel from 'embla-carousel-react'
+import { useRouter } from "next/navigation"
 
 interface Icons {
   icon: React.ElementType;
   title: string;
   description: string;
 }
+
 
 const FeatureCard: React.FC<Icons> = ({ icon: Icon, title, description }) => (
   <Card className="bg-gradient-to-r from-gray-800 to-black p-6 text-white transition-all duration-300 hover:scale-105 hover:shadow-2xl rounded-lg">
@@ -34,6 +36,15 @@ const FeatureCard: React.FC<Icons> = ({ icon: Icon, title, description }) => (
 
 const Home = () => {
   const [emblaRef, embla] = useEmblaCarousel({ loop: true }, [autoPlay({ delay: 3000 })]);
+  const router = useRouter()
+
+  const sendtoLogin = () => {
+    router.push("/sign-in")
+  }
+
+  const sendtoRegister = () => {
+    router.push("/sign-in")
+  }
 
   return (
     <main className="min-h-screen flex-grow flex flex-col items-center bg-gradient-to-b from-gray-900 to-black text-white">
@@ -47,7 +58,7 @@ const Home = () => {
           <p className="mt-3 md:mt-4 text-lg md:text-2xl font-light mb-8">
             Express yourself freely in a safe, anonymous environment where every voice matters.
           </p>
-          <Button className="bg-blue-500 hover:bg-blue-400 text-lg px-8 py-4 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+          <Button onClick={sendtoLogin} className="bg-blue-500 hover:bg-blue-400 text-lg px-8 py-4 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
             Start Sharing Now
           </Button>
         </div>
@@ -97,10 +108,10 @@ const Home = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Share Your Story?</h2>
           <p className="text-xl mb-8">Join thousands of users who trust our platform for anonymous communication.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-gradient-to-r from-blue-500 to-blue-700 text-lg px-8 py-4 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300">
+            <Button onClick={sendtoRegister} className="bg-gradient-to-r from-blue-500 to-blue-700 text-lg px-8 py-4 rounded-full shadow-md hover:shadow-lg transform hover:scale-105 transition duration-300">
               Create Account
             </Button>
-            <Button className="border-2 border-blue-500 hover:bg-blue-700 hover:text-white text-lg px-8 py-4 rounded-full transition duration-300">
+            <Button onClick={sendtoRegister} className="border-2 border-blue-500 hover:bg-blue-700 hover:text-white text-lg px-8 py-4 rounded-full transition duration-300">
               Learn More
             </Button>
           </div>
