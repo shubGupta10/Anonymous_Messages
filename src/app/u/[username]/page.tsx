@@ -22,13 +22,14 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { messageSchema } from '@/schemas/messageSchema'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import MessageChecker from '@/components/MessageChecker'
 
 export default function SendMessage() {
   const params = useParams<{ username: string }>()
   const username = params.username
   const { toast } = useToast()
   const [suggestedMessages, setSuggestedMessages] = useState<string[]>([])
-  const [isContentValid, setIsContentValid] = useState(false);
+  const [isContentAppropriate, setIsContentAppropriate] = useState<boolean | null>(null)
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -121,6 +122,10 @@ export default function SendMessage() {
             </p>
           </CardHeader>
           <CardContent className="p-4 sm:p-6">
+            <MessageChecker 
+              prompt={messageContent} 
+              onContentCheck={(isAppropriate: any) => setIsContentAppropriate(isAppropriate)}
+            />
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
                 <FormField
@@ -143,7 +148,7 @@ export default function SendMessage() {
                 <div className="flex justify-center">
                   <Button
                     type="submit"
-                    disabled={isLoading || !messageContent}
+                    disabled={isLoading || !messageContent || isContentAppropriate === false}
                     className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 sm:px-6 rounded-full transition duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isLoading ? (
@@ -154,7 +159,7 @@ export default function SendMessage() {
                     ) : (
                       <>
                         <Send className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                        Send Message
+                        {isContentAppropriate === false ? 'Content Inappropriate' : 'Send Message'}
                       </>
                     )}
                   </Button>
