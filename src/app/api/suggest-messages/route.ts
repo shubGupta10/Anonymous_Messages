@@ -9,7 +9,7 @@ if (!geminiApiKey) {
 }
 
 const googleAI = new GoogleGenerativeAI(geminiApiKey);
-const geminiModel = googleAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+const geminiModel = googleAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
 
 // Comment out runtime = 'edge' for default Node.js runtime
 // export const runtime = 'edge'; // REMOVE or comment out this line
