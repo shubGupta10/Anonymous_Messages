@@ -35,14 +35,14 @@ const Home = () => {
             Express yourself freely in a secure, anonymous environment where every voice matters and every story finds its audience.
           </p>
           <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
+            <Button
               onClick={() => router.push("/sign-in")}
               className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6 rounded-full group transition-all duration-300"
             >
               Get Started Now
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button 
+            <Button
               variant="outline"
               onClick={() => router.push("/about")}
               className="border-2 border-blue-500 text-blue-400 hover:bg-blue-950/50 text-lg px-8 py-6 rounded-full transition-all duration-300"
@@ -99,8 +99,9 @@ const Home = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="bg-blue-600 hover:bg-blue-700" />
-            <CarouselNext className="bg-blue-600 hover:bg-blue-700" />
+            <CarouselPrevious className="hidden md:flex text-white border-gray-700 bg-blue-600 hover:bg-blue-700" />
+            <CarouselNext className="hidden md:flex text-white border-gray-700 bg-blue-600 hover:bg-blue-700" />
+
           </Carousel>
         </div>
       </section>
@@ -114,7 +115,7 @@ const Home = () => {
           <p className="text-xl text-gray-300 mb-10">
             Join thousands of users who trust our platform for meaningful conversations.
           </p>
-          <Button 
+          <Button
             onClick={() => router.push("/sign-in")}
             className="bg-blue-600 hover:bg-blue-700 text-lg px-10 py-6 rounded-full group transition-all duration-300"
           >
