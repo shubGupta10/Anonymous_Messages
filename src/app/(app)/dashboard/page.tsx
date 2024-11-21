@@ -84,7 +84,7 @@ export default function UserDashboard() {
       const username = session.user.username
       if (username) {
         const baseUrl = `${window.location.protocol}//${window.location.host}`
-        setProfileUrl(`${baseUrl}/u/${username}`)
+        setProfileUrl(`${baseUrl}/user/${username}`)
       }
     }
   }, [session])
