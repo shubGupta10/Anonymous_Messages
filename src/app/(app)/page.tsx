@@ -44,8 +44,8 @@ const Home = () => {
             </Button>
             <Button
               variant="outline"
-              onClick={() => router.push("/about")}
-              className="border-2 border-blue-500 text-blue-400 hover:bg-blue-950/50 text-lg px-8 py-6 rounded-full transition-all duration-300"
+              onClick={() => router.push("/sign-in")}
+              className="border-2 border-blue-500 text-blue-400 hover:bg-blue-950/50 hover:text-white text-lg px-8 py-6 rounded-full transition-all duration-300"
             >
               Learn More
             </Button>
@@ -99,8 +99,8 @@ const Home = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="hidden md:flex text-white border-gray-700 bg-blue-600 hover:bg-blue-700" />
-            <CarouselNext className="hidden md:flex text-white border-gray-700 bg-blue-600 hover:bg-blue-700" />
+            <CarouselPrevious className="hidden md:flex text-white border-gray-700 bg-blue-600 hover:bg-blue-700 hover:text-gray-200" />
+            <CarouselNext className="hidden md:flex text-white border-gray-700 bg-blue-600 hover:bg-blue-700 hover:text-gray-200" />
 
           </Carousel>
         </div>
@@ -116,7 +116,7 @@ const Home = () => {
             Join thousands of users who trust our platform for meaningful conversations.
           </p>
           <Button
-            onClick={() => router.push("/sign-in")}
+            onClick={() => router.push("/sign-up")}
             className="bg-blue-600 hover:bg-blue-700 text-lg px-10 py-6 rounded-full group transition-all duration-300"
           >
             Start Your Journey
