@@ -6,6 +6,7 @@ declare module 'next-auth'{
         _id?: string;
         isVerified?; boolean;
         isAcceptingMessages?: boolean;
+        anonShield?: boolean;
         username?: string
     }
 
@@ -14,6 +15,7 @@ declare module 'next-auth'{
             _id?: string;
             isVerified?: boolean;
             isAcceptingMessages?: boolean;
+            anonShield?: boolean;
             username?: string
         } & DefaultSession['user']
     }
@@ -24,6 +26,7 @@ declare module 'next-auth/jwt' {
       _id?: string;
       isVerified?: boolean;
       isAcceptingMessages?: boolean;
+      anonShield?: boolean;
       username?: string;
     }
   }

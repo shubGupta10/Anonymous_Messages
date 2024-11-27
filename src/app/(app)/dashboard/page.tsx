@@ -4,18 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useSession } from 'next-auth/react'
-import { 
-  Loader2, 
-  RefreshCcw, 
-  Link as LinkIcon, 
-  Clipboard, 
-  MessageSquare, 
-  Settings,
-  ChevronRight,
-  Bell,
-  Users,
-  BarChart3
-} from 'lucide-react'
+import { Loader2, RefreshCcw, LinkIcon, Clipboard, MessageSquare, Settings, ChevronRight, Bell, Users, BarChart3, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
@@ -32,6 +21,7 @@ export default function UserDashboard() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [isSwitchLoading, setIsSwitchLoading] = useState(false)
+  const [isAnonShieldLoading, setIsAnonShieldLoading] = useState(false)
   const [profileUrl, setProfileUrl] = useState<string>('')
   const [stats, setStats] = useState({
     totalMessages: 0,
@@ -47,6 +37,7 @@ export default function UserDashboard() {
 
   const { register, watch, setValue } = form
   const acceptMessages = watch('acceptMessages')
+  const [anonShield, setAnonShield] = useState(false)
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId))
@@ -70,6 +61,23 @@ export default function UserDashboard() {
       })
     } finally {
       setIsSwitchLoading(false)
+    }
+  }
+
+  const fetchAnonShield = async () => {
+    setIsAnonShieldLoading(true)
+    try {
+      const response = await fetch('/api/anon-shield')
+      const data = await response.json()
+      setAnonShield(data.anonShield)
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch Anon Shield settings',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsAnonShieldLoading(false)
     }
   }
 
@@ -105,6 +113,7 @@ export default function UserDashboard() {
     if (session?.user?.username) {
       fetchMessages()
       fetchAcceptMessage()
+      fetchAnonShield()
       const baseUrl = `${window.location.protocol}//${window.location.host}`
       setProfileUrl(`${baseUrl}/user/${session.user.username}`)
     }
@@ -127,6 +136,28 @@ export default function UserDashboard() {
       toast({
         title: 'Error',
         description: 'Failed to update settings',
+        variant: 'destructive',
+      })
+    }
+  }
+
+  const handleAnonShieldChange = async () => {
+    try {
+      const response = await fetch('/api/anon-shield', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ anonShield: !anonShield }),
+      })
+      const data = await response.json()
+      setAnonShield(!anonShield)
+      toast({
+        title: 'Updated',
+        description: data.message,
+      })
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update Anon Shield settings',
         variant: 'destructive',
       })
     }
@@ -238,7 +269,7 @@ export default function UserDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-4">
                 <div>
                   <Label htmlFor="accept-messages" className="font-medium text-white">
                     Accept Messages
@@ -253,6 +284,23 @@ export default function UserDashboard() {
                   checked={acceptMessages}
                   onCheckedChange={handleSwitchChange}
                   disabled={isSwitchLoading}
+                  className="data-[state=checked]:bg-blue-600"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="anon-shield" className="font-medium text-white">
+                    Anon Shield
+                  </Label>
+                  <p className="text-sm text-gray-400 mt-1">
+                    {anonShield ? "Anon Shield is enabled" : "Anon Shield is disabled"}
+                  </p>
+                </div>
+                <Switch
+                  id="anon-shield"
+                  checked={anonShield}
+                  onCheckedChange={handleAnonShieldChange}
+                  disabled={isAnonShieldLoading}
                   className="data-[state=checked]:bg-blue-600"
                 />
               </div>
@@ -281,7 +329,7 @@ export default function UserDashboard() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {messages.map((message) => (
                   <MessageCards
-                  key={message._id as string}
+                    key={message._id as string}
                     message={message}
                     onMessageDelete={handleDeleteMessage}
                   />
@@ -300,3 +348,4 @@ export default function UserDashboard() {
     </div>
   )
 }
+

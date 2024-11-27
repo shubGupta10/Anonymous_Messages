@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Loader2, Send, MessageSquare, UserPlus, AlertCircle, ChevronRight } from 'lucide-react'
@@ -44,6 +44,7 @@ export default function SendMessage() {
   const [isLoading, setIsLoading] = useState(false)
   const [isFetchingMessages, setIsFetchingMessages] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isAnonShield, setIsAnonShield] = useState(false);
 
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
     setIsLoading(true)
@@ -83,11 +84,11 @@ export default function SendMessage() {
     try {
       const response = await fetch('/api/suggest-messages', { method: 'POST' })
       const data = await response.json()
-      
+
       if (data.content) {
         const messages = String(data.content).split('||').map(msg => msg.trim())
         setSuggestedMessages(messages)
-        
+
         toast({
           title: 'Success',
           description: 'Successfully loaded suggested messages',
@@ -98,7 +99,7 @@ export default function SendMessage() {
       }
     } catch (error) {
       console.error('Error details:', error)
-      
+
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch suggested messages'
       setError(errorMessage)
       toast({
@@ -111,6 +112,40 @@ export default function SendMessage() {
     }
   }
 
+  useEffect(() => {
+    const fetchAnonShieldStatus = async (username: string) => {
+      try {
+        const response = await fetch(`/api/anon-status/${username}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setIsAnonShield(data.anonShield);
+        }
+      } catch (error) {
+        toast({
+          title: 'Error',
+          description: 'Unable to fetch Anon Shield status',
+          variant: 'destructive',
+        });
+        console.error('Error fetching Anon Shield status:', error);
+      }
+    };
+
+    if (username) {
+      fetchAnonShieldStatus(username);
+    }
+  }, [username, toast]);
+
+
+
+
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-blue-900 to-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto space-y-12">
@@ -122,10 +157,26 @@ export default function SendMessage() {
             </p>
           </CardHeader>
           <CardContent className="p-6 sm:p-8">
-            <MessageChecker 
-              prompt={messageContent} 
-              onContentCheck={(isAppropriate: any) => setIsContentAppropriate(isAppropriate)}
-            />
+            <div>
+              {isAnonShield === true ? (
+                <MessageChecker
+                  prompt={messageContent}
+                  onContentCheck={(isAppropriate: any) => setIsContentAppropriate(isAppropriate)}
+                />
+              ) : (
+                <div className="flex justify-center items-center mb-6">
+                <p className="text-xl sm:text-lg font-semibold text-white bg-gray-800 bg-opacity-70 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
+                  User has disabled the Anon Shield, 
+                  <span>
+                    <a href="/sign-up" className="text-blue-400 pl-2 hover:text-blue-600 transition-colors duration-300">
+                      learn more
+                    </a>
+                  </span>
+                </p>
+              </div>
+              )}
+            </div>
+
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
