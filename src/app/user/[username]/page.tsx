@@ -166,7 +166,7 @@ export default function SendMessage() {
               ) : (
                 <div className="flex justify-center items-center mb-6">
                 <p className="text-xl sm:text-lg font-semibold text-white bg-gray-800 bg-opacity-70 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-300">
-                  User has disabled the Anon Shield, 
+                  User has disabled the Anon Shield 
                   <span>
                     <a href="/sign-up" className="text-blue-400 pl-2 hover:text-blue-600 transition-colors duration-300">
                       learn more

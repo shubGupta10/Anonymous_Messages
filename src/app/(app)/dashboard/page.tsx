@@ -151,8 +151,8 @@ export default function UserDashboard() {
       const data = await response.json()
       setAnonShield(!anonShield)
       toast({
-        title: 'Updated',
-        description: data.message,
+        title: 'Enabled',
+        description: "Anon Shield is enabled",
       })
     } catch (error) {
       toast({
