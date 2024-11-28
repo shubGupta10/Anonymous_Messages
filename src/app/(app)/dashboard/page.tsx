@@ -37,7 +37,7 @@ export default function UserDashboard() {
 
   const { register, watch, setValue } = form
   const acceptMessages = watch('acceptMessages')
-  const [anonShield, setAnonShield] = useState(false)
+  const [anonShieldStatus, setAnonShieldStatus] = useState(false)
 
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId))
@@ -61,23 +61,6 @@ export default function UserDashboard() {
       })
     } finally {
       setIsSwitchLoading(false)
-    }
-  }
-
-  const fetchAnonShield = async () => {
-    setIsAnonShieldLoading(true)
-    try {
-      const response = await fetch('/api/anon-shield')
-      const data = await response.json()
-      setAnonShield(data.anonShield)
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch Anon Shield settings',
-        variant: 'destructive',
-      })
-    } finally {
-      setIsAnonShieldLoading(false)
     }
   }
 
@@ -109,11 +92,29 @@ export default function UserDashboard() {
     }
   }
 
+  const fetchAnonShieldStatus = async (username: string) => {
+    try {
+      const response = await fetch(`/api/anon-status/${username}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      const data = await response.json()
+      console.log('Anon Shield Status:', data);
+      
+      setAnonShieldStatus(data.anonShield);
+    } catch (error) {
+      console.error('Failed to fetch Anon Shield status:', error)
+    }
+  }
+
   useEffect(() => {
     if (session?.user?.username) {
       fetchMessages()
       fetchAcceptMessage()
-      fetchAnonShield()
+      fetchAnonShieldStatus(session.user.username)
       const baseUrl = `${window.location.protocol}//${window.location.host}`
       setProfileUrl(`${baseUrl}/user/${session.user.username}`)
     }
@@ -142,17 +143,18 @@ export default function UserDashboard() {
   }
 
   const handleAnonShieldChange = async () => {
+    setIsAnonShieldLoading(true)
     try {
       const response = await fetch('/api/anon-shield', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ anonShield: !anonShield }),
+        body: JSON.stringify({ anonShield: !anonShieldStatus }),
       })
       const data = await response.json()
-      setAnonShield(!anonShield)
+      setAnonShieldStatus(data.anonShield)
       toast({
-        title: 'Enabled',
-        description: "Anon Shield is enabled",
+        title: data.anonShield ? 'Enabled' : 'Disabled',
+        description: data.anonShield ? "Anon Shield is enabled" : "Anon Shield is disabled",
       })
     } catch (error) {
       toast({
@@ -160,6 +162,8 @@ export default function UserDashboard() {
         description: 'Failed to update Anon Shield settings',
         variant: 'destructive',
       })
+    } finally {
+      setIsAnonShieldLoading(false)
     }
   }
 
@@ -208,7 +212,7 @@ export default function UserDashboard() {
           {[
             { icon: MessageSquare, title: 'Total Messages', value: stats.totalMessages, color: 'text-blue-400' },
             { icon: Bell, title: 'New Messages', value: stats.newMessages, color: 'text-green-400' },
-            { icon: Users, title: 'Active Users', value: stats.activeUsers + "+" , color: 'text-purple-400' }
+            { icon: Users, title: 'Active Users', value: stats.activeUsers + "+", color: 'text-purple-400' }
           ].map((stat, i) => (
             <Card key={i} className="bg-blue-950/40 border-blue-900/50 backdrop-blur-sm hover:bg-blue-900/30 transition-colors">
               <CardContent className="p-6">
@@ -293,15 +297,15 @@ export default function UserDashboard() {
                     Anon Shield
                   </Label>
                   <p className="text-sm text-gray-400 mt-1">
-                    {anonShield ? "Anon Shield is enabled" : "Anon Shield is disabled"}
+                    {anonShieldStatus ? "Anon Shield is enabled" : "Anon Shield is disabled"}
                   </p>
                 </div>
                 <Switch
                   id="anon-shield"
-                  checked={anonShield}
+                  checked={anonShieldStatus}
                   onCheckedChange={handleAnonShieldChange}
                   disabled={isAnonShieldLoading}
-                  className="data-[state=checked]:bg-blue-600"
+                  className="data-[state=checked]:bg-blue-600 data-[state=unchecked]:bg-gray-600"
                 />
               </div>
             </CardContent>
